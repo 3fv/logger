@@ -38,6 +38,7 @@
   "homepage": "https://github.com/3fv/logger#readme",
   "dependencies": {
     "@3fv/guard": "^1.0.15",
+    "@3fv/logger-proxy": "^1.0.1",
     "@3fv/prelude-ts": "^0.8.13",
     "bluebird": "^3.7.2",
     "chalk": "^3.0.0",

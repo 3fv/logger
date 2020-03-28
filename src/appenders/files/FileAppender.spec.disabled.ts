@@ -1,10 +1,11 @@
 import "jest"
-import { Config, Level, LogFactory, Logger, Nullable } from "../../Types"
+import { Config, LogFactory, Logger, Nullable } from "../../Types"
 import { configure } from "../../Config"
 import { FileAppender } from "./FileAppender"
 import * as Path from "path"
 import { Deferred } from "../../util/Deferred"
 import { cleanup, getLogFiles, TestLogDir } from "../../test/test-utils"
+import { Level } from "@3fv/logger-proxy"
 
 let config: Nullable<Config> = null
 let factory: Nullable<LogFactory> = null

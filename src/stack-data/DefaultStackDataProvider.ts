@@ -19,8 +19,8 @@ export function DefaultStackDataProvider(entry: Partial<Entry>, config: Config):
     frames = err.stack.split("\n").slice(3),
     
     frame = frames[removeFrames] || frames[0],
-    frameParts = stackReg.exec(frame) || stackReg2.exec(frame),
-    path = frameParts[2]
+    frameParts = (stackReg.exec(frame) || stackReg2.exec(frame)) || [],
+    path = frameParts[2] || "N/A"
   
   return frameParts && frameParts.length === 5 ? {
     method: frameParts[1],

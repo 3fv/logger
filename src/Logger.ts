@@ -1,7 +1,9 @@
 import { getThresholdValue, pathToBasename } from "./util/CoreUtil"
-import { Category, Config, Entry, Level, LogFactory, Logger, Nullable } from "./Types"
+import { Category, Config, Entry,  LogFactory, Logger, Nullable } from "./Types"
 import { Option } from "@3fv/prelude-ts"
 import { isNumber, isFunction, isDefined } from "@3fv/guard"
+import { ILogger } from "@3fv/logger-proxy"
+import { Level } from "@3fv/logger-proxy"
 
 function log(
   factory: LogFactory,

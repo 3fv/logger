@@ -1,4 +1,5 @@
-import { Config, LogFactory, Level, Logger, Category } from "./Types"
+import { Level } from "@3fv/logger-proxy"
+import { Config, LogFactory, Logger, Category } from "./Types"
 import { defaultsDeep, cloneDeep } from "lodash"
 import { DefaultFormatter } from "./formatters/DefaultFormatter"
 import { DefaultStackDataProvider } from "./stack-data/DefaultStackDataProvider"

@@ -1,8 +1,9 @@
 import { Option } from "@3fv/prelude-ts"
-import { Level, LevelName, LevelNames } from "../Types"
+
 import { flatten } from "lodash"
 import { isString, getValue } from "@3fv/guard"
 import { requiredValue } from "./FpTools"
+import { Level, LevelNames, LevelName } from "@3fv/logger-proxy"
 
 export function stringify(value:any) {
   try {

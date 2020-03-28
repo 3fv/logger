@@ -24,8 +24,8 @@ export class RollingFileHandler extends FileHandler<RollingFileAppenderConfig> {
 
   }
   
-  private async houseKeeping() {
-    await Promise.all(range(this.maxFiles,100 - this.maxFiles)
+  private houseKeeping() {
+    return Promise.all(range(this.maxFiles,100 - this.maxFiles)
       .map(index => this.filename(index))
       .map(filename =>
         FsAsync.exists(filename)

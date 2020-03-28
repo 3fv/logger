@@ -1,4 +1,4 @@
-import { Config, Formatter, Entry, LevelName, Color, Level, Nullable, StackData, AppenderTemplateFn } from "../Types"
+import { Config, Formatter, Entry,  Color, Nullable, StackData, AppenderTemplateFn } from "../Types"
 import * as moment from "moment"
 import * as chalk from "chalk"
 import { defaultsDeep, memoize, isEmpty, isError, get, defaultTo } from "lodash"
@@ -7,6 +7,7 @@ import { buildString, getThresholdValue } from "../util/CoreUtil"
 import { Option } from "@3fv/prelude-ts"
 import { If, Run } from "../util/FpTools"
 import { isString } from "@3fv/guard"
+import { Level, LevelName } from "@3fv/logger-proxy"
 
 const DefaultCategoryName = "ROOT"
 

@@ -1,9 +1,10 @@
+import { Level } from "@3fv/logger-proxy"
 import {
   Appender,
   Category,
   Config,
   Formatter,
-  Level,
+  
   Entry,
   Nullable, AppenderConfig, LogFactory
 } from "../Types"

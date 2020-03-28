@@ -1,4 +1,5 @@
 import { defaultsDeep } from "lodash"
+import { ILogger, Level } from "@3fv/logger-proxy"
 
 export type Nullable<T> = T | undefined | null
 
@@ -117,22 +118,6 @@ export interface Formatter<FormatterConfig = {}, Output extends string = string>
 }
 
 
-/**
- * Log level values
- */
-export enum Level {
-  trace = "trace",
-  debug = "debug",
-  info = "info",
-  warn = "warn",
-  error = "error",
-  fatal = "fatal"
-}
-
-export type LevelName = keyof typeof Level
-
-export const LevelNames:Array<LevelName> = Object.values(Level)
-
 
 /**
  * Logger interface
@@ -140,9 +125,7 @@ export const LevelNames:Array<LevelName> = Object.values(Level)
  * @export
  * @interface Logger
  */
-export type Logger = {
-	[Level in LevelName]: (message: string, ...args:any[]) => void
-} & {
+export type Logger = ILogger & {
   isTraceEnabled(): boolean
   isDebugEnabled(): boolean
   isInfoEnabled(): boolean
@@ -204,6 +187,8 @@ export  type BackgroundColor =
   | "bgCyanBright"
   | "bgWhiteBright";
 
+
+export type GetLogger =  (path: string, categoryName?: Nullable<string>) => Logger
 
 export interface LogFactory {
   getRootLevel: () => Level

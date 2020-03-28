@@ -1,6 +1,5 @@
 import { isDefined, isFunction } from "@3fv/guard"
 import { Option, OptionStatic } from "@3fv/prelude-ts"
-import { ShellString, test } from "shelljs"
 import { Nullable } from "../Types"
 import { RequiredValueError } from "./Errors"
 
@@ -20,7 +19,6 @@ export const If = IfElse
 export function Identity(value) {
   return value
 }
-
 /**
  * Get a field that can not be null or undefined
  *
@@ -37,8 +35,9 @@ export function requiredValue<T, V extends Nullable<T>>(value: V, errorMessage: 
 
 export class FileOption extends OptionStatic {
   
-  static of(path: string | ShellString): Option<string> {
-    path = (!path ? undefined : isFunction(path.toString) ? path.toString() : path) as Nullable<string>
+  static of<S extends Nullable<string> = Nullable<string>>(path: S): Option<string> {
+    const {test} = require("shelljs")
+    path = (!path ? undefined : isFunction(path.toString) ? path.toString() : path) as S
     return Option.of(test("-e", path) ? path : undefined)
   }
   

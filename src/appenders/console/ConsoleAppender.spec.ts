@@ -1,7 +1,8 @@
 import "jest"
-import { Level, LogFactory, Logger, Nullable } from "../../Types"
+import { LogFactory, Logger, Nullable } from "../../Types"
 import { configure } from "../../Config"
 import { ConsoleAppender } from "../console/ConsoleAppender"
+import { Level } from "@3fv/logger-proxy"
 
 let factory: Nullable<LogFactory> = null
 let log: Nullable<Logger>  = null
