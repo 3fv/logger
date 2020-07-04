@@ -15,8 +15,8 @@ cp README.md package.json lib/
 #find ./ -name "*.ts" | xargs -IsrcFile cp srcFile ../lib
 
 pushd lib
-yarn publish . --non-interactive --tag ${NPM_VERSION}
+npm publish --tag latest
 cp package.json ../
 popd
-git push 
+git push
 echo "Successfully released version ${NPM_VERSION}!"

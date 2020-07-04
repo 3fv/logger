@@ -1,9 +1,13 @@
 import { getThresholdValue, pathToBasename } from "./util/CoreUtil"
-import { Category, Config, Entry,  LogFactory, Logger, Nullable } from "./Types"
+import { Category, LogConfig, Entry, LogFactory, Logger, Nullable, StackDataProvider, LogStackConfig } from "./Types"
 import { Option } from "@3fv/prelude-ts"
 import { isNumber, isFunction, isDefined } from "@3fv/guard"
 import { ILogger } from "@3fv/logger-proxy"
 import { Level } from "@3fv/logger-proxy"
+
+function isStackDataProvider(o: any): o is StackDataProvider {
+  return isFunction(o)
+}
 
 function log(
   factory: LogFactory,
@@ -12,9 +16,10 @@ function log(
   level: Nullable<Level>,
   message: string,
   args: any[]
-) {
+)
+{
   const
-    config = factory.getConfig(),
+    config: LogConfig = factory.getConfig(),
     { stack: stackConfig } = config,
     { config: categoryConfig } = category,
     { appenderIds } = categoryConfig,
@@ -30,8 +35,12 @@ function log(
       message,
       args,
       stackData: Option.of(stackConfig)
-        .filter(({ enabled, provider }) => !!enabled && isFunction(provider))
-        .map(({ provider }) => provider(entry, config))
+        .filter(({ enabled, provider }) => !!enabled && isStackDataProvider(provider))
+        .map(({ provider }: LogStackConfig) =>
+          (
+            provider as StackDataProvider
+          )(entry, config)
+        )
         .getOrNull()
     }
     appenders.forEach(appender => {
@@ -42,8 +51,10 @@ function log(
 
 export function makeLogger(factory: LogFactory, path: string, categoryName: string): Logger {
   
-  const [traceThreshold, debugThreshold, infoThreshold] = [Level.trace, Level.debug, Level.info]
-    .map(getThresholdValue)
+  const
+    [traceThreshold, debugThreshold, infoThreshold] = [Level.trace, Level.debug, Level.info]
+      .map(getThresholdValue),
+    rootLevel = () => factory.getConfig().rootLevel
   
   return Option.of(factory.getCategory(categoryName))
     .map(category => {
@@ -59,15 +70,15 @@ export function makeLogger(factory: LogFactory, path: string, categoryName: stri
             return logger
           },
           isTraceEnabled: () =>
-            [overrideThreshold, getThresholdValue(factory.getConfig().rootLevel)]
+            [overrideThreshold, getThresholdValue(rootLevel())]
               .filter(isDefined)
               .some(level => level >= traceThreshold),
           isDebugEnabled: () =>
-            [overrideThreshold, getThresholdValue(factory.getConfig().rootLevel)]
+            [overrideThreshold, getThresholdValue(rootLevel())]
               .filter(isDefined)
               .some(level => level >= debugThreshold),
           isInfoEnabled: () =>
-            [overrideThreshold, getThresholdValue(factory.getConfig().rootLevel)]
+            [overrideThreshold, getThresholdValue(rootLevel())]
               .filter(isDefined)
               .some(level => level >= infoThreshold)
           
@@ -81,12 +92,16 @@ export function makeLogger(factory: LogFactory, path: string, categoryName: stri
           }
         }
       )
-      return Object.values(Level).reduce((logger, level) => {
-        logger[level] = (message: string, ...args: any[]) => {
-          log(factory, logger, category, level, message, args)
-        }
-        return logger
-      }, logger)
+      return Object
+        .values(Level)
+        .reduce((logger, level) =>
+            Object
+              .assign(logger, {
+                [level]: (message: string, ...args: any[]) => {
+                  log(factory, logger, category, level, message, args)
+                }
+              })
+          , logger)
     })
     .getOrThrow()
 }

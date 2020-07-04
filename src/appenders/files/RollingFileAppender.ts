@@ -1,5 +1,5 @@
 import { AbstractAppender } from "../AbstractAppender"
-import { Config, Entry } from "../../Types"
+import { LogConfig, Entry } from "../../Types"
 import { RollingFileAppenderConfig } from "./FileAppenderTypes"
 import { RollingFileHandler } from "./RollingFileHandler"
 import * as Path from "path"
@@ -48,7 +48,7 @@ export class RollingFileAppender extends AbstractAppender<RollingFileAppenderCon
    * @param entry
    * @param config
    */
-  write(entry:Entry, config: Config) {
+  write(entry:Entry, config: LogConfig) {
     const forward = () =>
       this.handler.append(this.format(entry, config)[0])
     

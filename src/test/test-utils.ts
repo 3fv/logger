@@ -1,4 +1,4 @@
-import { Config } from "../Types"
+import { LogConfig } from "../Types"
 import { test, find, rm } from "shelljs"
 import { Deferred } from "../util/Deferred"
 import { mkdirp } from "../util/ShellUtil"
@@ -26,7 +26,7 @@ export function getLogFiles(prefix: string) {
 }
 
 
-export const cleanup = async (config: Config,prefix: string) => {
+export const cleanup = async (config: LogConfig,prefix: string) => {
   if (!!config)
     await Promise.all(config.appenders.map(it => it.close()))
   

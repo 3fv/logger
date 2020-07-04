@@ -5,6 +5,12 @@ import { isString, getValue } from "@3fv/guard"
 import { requiredValue } from "./FpTools"
 import { Level, LevelNames, LevelName } from "@3fv/logger-proxy"
 
+export const kJSONMaxLength = 2048
+
+const gConstraints = {
+  jsonMaxLength: kJSONMaxLength
+}
+
 export function stringify(value:any) {
   try {
     const args:[string,Array<string> | undefined] = [value,undefined]
@@ -14,8 +20,8 @@ export function stringify(value:any) {
     }
     
     let json = JSON.stringify(...args)
-    if (json.length > 2048)
-      json = json.substr(0,2048)
+    if (json.length > gConstraints.jsonMaxLength)
+      json = json.substr(0,gConstraints.jsonMaxLength)
     
     return json
     
@@ -96,16 +102,30 @@ export function getProp(obj, keyPath) {
 }
 
 
+
 const thresholdValueMap = LevelNames.reduce((map, level, index) =>
     map.set(level, index)
   , new Map<LevelName,number>())
 
+/**
+ * Converts a level to a number
+ *
+ * @param {Level} level
+ * @returns {number}
+ */
 export function getThresholdValue(level:Level):number {
   return requiredValue(thresholdValueMap.get(level))
 }
 
 export type BuildStringArg = Array<string | string[] | Array<BuildStringArg>>
 
+/**
+ * Flatten and join strings
+ *
+ * @param {BuildStringArg} src
+ * @param {string} joinWith
+ * @returns {string}
+ */
 export function buildString(src: BuildStringArg,joinWith: string = " "): string {
   let dest:any[] = [...src]
   while(dest.some(it => Array.isArray(it))) {

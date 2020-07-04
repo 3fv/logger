@@ -1,5 +1,5 @@
 import { AbstractAppender } from "../AbstractAppender"
-import { AppenderConfig, Config, Entry, Nullable } from "../../Types"
+import { AppenderConfig, LogConfig, Entry, Nullable } from "../../Types"
 import { formatValue } from "../../util/CoreUtil"
 import {Option} from "@3fv/prelude-ts"
 import { isFunction } from "@3fv/guard"
@@ -14,7 +14,7 @@ export class ConsoleAppender extends AbstractAppender<ConsoleAppenderConfig> {
     super("console", "console", config || {})
   }
   
-  write(entry: Entry, config: Config): void {
+  write(entry: Entry, config: LogConfig): void {
     const
       {level} = entry,
       logFn = Option.ofNullable(console[level])

@@ -1,11 +1,11 @@
-import { Config, Entry, Nullable, StackData } from "../Types"
+import { LogConfig, Entry, Nullable, StackData } from "../Types"
 import * as Path from "path"
 
 const
   stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/i,
   stackReg2 = /at\s+()(.*):(\d*):(\d*)/i
 
-export function DefaultStackDataProvider(entry: Partial<Entry>, config: Config): Nullable<StackData> {
+export function DefaultStackDataProvider(entry: Partial<Entry>, config: LogConfig): Nullable<StackData> {
   const
     { stack } = config,
     { removeFrames, root, enabled } = stack

@@ -1,5 +1,5 @@
 import { Level } from "@3fv/logger-proxy"
-import { Config, LogFactory, Logger, Category } from "./Types"
+import { LogConfig, LogFactory, Logger, Category } from "./Types"
 import { defaultsDeep, cloneDeep } from "lodash"
 import { DefaultFormatter } from "./formatters/DefaultFormatter"
 import { DefaultStackDataProvider } from "./stack-data/DefaultStackDataProvider"
@@ -9,9 +9,9 @@ import { makeLogger } from "./Logger"
 /**
  * Config defaults
  *
- * @type {Config}
+ * @type {LogConfig}
  */
-const defaultConfig: Config = {
+const defaultConfig: LogConfig = {
   appenders: [],
   formatter: DefaultFormatter,
   rootLevel: Level.debug,
@@ -27,7 +27,7 @@ const defaultConfig: Config = {
  * Configurator creates log factories
  */
 export type Configurator = {
-  [Key in keyof Config]: (value: Config[Key]) => Configurator
+  [Key in keyof LogConfig]: (value: LogConfig[Key]) => Configurator
 } & {
   getFactory: () => LogFactory
 }
@@ -45,11 +45,11 @@ export function configure(): Configurator {
     categoryMap = new Map<string, Category>(),
     factory: LogFactory = {
     
-    getConfig: (): Config =>  config,
+    getConfig: (): LogConfig =>  config,
       getRootLevel: (): Level =>
         config.rootLevel
       ,
-      setConfig: (patch: Partial<Config>): Config => {
+      setConfig: (patch: Partial<LogConfig>): LogConfig => {
         return Object.assign(config, defaultsDeep({ ...patch }, config))
       },
       getAppenderIds: (): string[] => {

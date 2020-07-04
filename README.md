@@ -12,18 +12,20 @@
 Pretty simple
 
 ```bash
-yarn i --save @3fv/logger
+yarn add @3fv/logger
 ```
 
-## Use
+## Setup
 It couldn't be much easier
 
 ```typescript
+import * as Path from "path"
+
 import {getLogger, configure, Level} from "@3fv/logger"
 import { ConsoleAppender } from "@3fv/logger/appenders/console/ConsoleAppender"
 import { FileAppender } from "@3fv/logger/appenders/files/FileAppender" 
 import { RollingFileAppender } from "@3fv/logger/appenders/files/RollingFileAppender"
-import * as Path from "path"
+
 
 // Chained configure() function supports every option
 configure()

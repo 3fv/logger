@@ -1,4 +1,4 @@
-import { Config, Formatter, Entry,  Color, Nullable, StackData, AppenderTemplateFn } from "../Types"
+import { LogConfig, Formatter, Entry,  Color, Nullable, StackData, AppenderTemplateFn } from "../Types"
 import * as moment from "moment"
 import * as chalk from "chalk"
 import { defaultsDeep, memoize, isEmpty, isError, get, defaultTo } from "lodash"
@@ -91,13 +91,16 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         
       }),
       name = (showCategory || showLoggerName) ? `(${Run(() => {
-        const parts = [
-          If(showCategory, defaultTo(categoryName, DefaultCategoryName)),
-          If(showLoggerName, loggerName, null)
-        ]
-        
-        return buildString(
-        parts.filter(isString),
+        return  buildString(
+          Option
+            .of([
+              If(showCategory, defaultTo(categoryName, DefaultCategoryName)),
+              If(showLoggerName, loggerName, null)
+            ])
+            .map(parts =>
+              parts.filter((part, index) => isString(part) && part != parts[index + 1])
+            )
+            .get(),
         ":"
       )})})` : ""
     
@@ -175,7 +178,7 @@ export class PatternFormatter implements Formatter<PatternFormatterConfig> {
     return (text:string) => chalk`{${prefix} ${text}${suffix}}`
   })
   
-  format(entry:Entry, config:Config):[string, Array<any>] {
+  format(entry:Entry, config:LogConfig):[string, Array<any>] {
     const
       { config: formatterConfig } = this,
       { template, showError, showStackDataAlways, showLoggerName, timestampFormat, showArgs, showCategory, showTimestamp } = formatterConfig,

@@ -2,7 +2,7 @@ import { Level } from "@3fv/logger-proxy"
 import {
   Appender,
   Category,
-  Config,
+  LogConfig,
   Formatter,
   
   Entry,
@@ -66,7 +66,7 @@ export abstract class AbstractAppender<C extends AppenderConfig = AppenderConfig
     return factory
   }
   
-  format(entry:Entry, config:Config = this.factory.getConfig()): [string, Array<any>] {
+  format(entry:Entry, config:LogConfig = this.factory.getConfig()): [string, Array<any>] {
     const {formatter} = this
     ok(isDefined(formatter) && isFunction(formatter.format), `No valid formatter available`)
     return formatter.format(entry,config)
@@ -100,15 +100,15 @@ export abstract class AbstractAppender<C extends AppenderConfig = AppenderConfig
     this.state.formatter = value
   }
   
-  abstract write(entry: Entry, config: Config):void
+  abstract write(entry: Entry, config: LogConfig):void
   
   /**
    * Append a new entry
    *
    * @param {Entry} entry
-   * @param {Config} config
+   * @param {LogConfig} config
    */
-  append(entry:Entry, config:Config) {
+  append(entry:Entry, config:LogConfig) {
     const
       entryThreshold = getThresholdValue(entry.level),
       shouldLog =

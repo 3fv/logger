@@ -1,5 +1,5 @@
 import { AbstractAppender } from "../AbstractAppender"
-import { Config, Entry } from "../../Types"
+import { LogConfig, Entry } from "../../Types"
 import { defaultsDeep } from "lodash"
 import { FileAppenderConfig } from "./FileAppenderTypes"
 import { FileHandler } from "./FileHandler"
@@ -44,7 +44,7 @@ export class FileAppender extends AbstractAppender<FileAppenderConfig> {
    * @param entry
    * @param config
    */
-  write(entry:Entry, config: Config) {
+  write(entry:Entry, config: LogConfig) {
     const forward = () =>
       this.handler.append(this.format(entry, config)[0])
     

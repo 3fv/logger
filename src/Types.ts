@@ -51,24 +51,26 @@ export class Category {
   
 }
 
-export interface Config {
+export interface LogStackConfig {
+  provider: StackDataProvider
+  root: string
+  removeFrames:number  //Defaults to #
+  enabled:boolean
+}
+
+export interface LogConfig {
   rootLevel:Level
   formatter:Formatter
   appenders:Appender<any>[]
   
-  stack:{
-    provider: StackDataProvider
-    root: string
-    removeFrames:number  //Defaults to #
-    enabled:boolean
-  }
+  stack: LogStackConfig
   
 }
 
 /**
  * Responsible for collecting stack, method, file info
  */
-export type StackDataProvider = (entry:Partial<Entry>, config:Config) => Nullable<StackData>
+export type StackDataProvider = (entry:Partial<Entry>, config:LogConfig) => Nullable<StackData>
 
 /**
  * Appender config
@@ -103,7 +105,7 @@ export type AppenderTemplateFn<Ext = any> = Entry & Ext
 export interface Appender<AppenderConfig> {
   readonly id:string
   readonly type:string
-  append:(entry:Entry, config:Config) => void
+  append:(entry:Entry, config:LogConfig) => void
   close:() => Promise<void>
   setFactory: (factory: LogFactory) => void
   setFormatter?:(formatter:Nullable<Formatter>) => void
@@ -114,7 +116,7 @@ export interface Appender<AppenderConfig> {
 
 export interface Formatter<FormatterConfig = {}, Output extends string = string> {
   config:FormatterConfig
-  format:(entry:Entry, config:Config) => [Output, Array<any>]
+  format:(entry:Entry, config:LogConfig) => [Output, Array<any>]
 }
 
 
@@ -195,8 +197,8 @@ export interface LogFactory {
   getLogger: (path: string, categoryName?: Nullable<string>) => Logger
   getCategory: (name: string) => Category
   getAppenderIds: () => Array<string>
-  setConfig: (patch: Partial<Config>) => Config
-  getConfig: () => Config
+  setConfig: (patch: Partial<LogConfig>) => LogConfig
+  getConfig: () => LogConfig
 }
 /**
  Basic colors.
