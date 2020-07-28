@@ -97,7 +97,7 @@ export interface Entry {
   category:Category
   message:string
   args:any[]
-  stackData?:Nullable<StackData>
+  stackData?: StackData | ((entry: Entry) => StackData)
 }
 
 export type AppenderTemplateFn<Ext = any> = Entry & Ext

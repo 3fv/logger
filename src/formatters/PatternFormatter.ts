@@ -1,12 +1,12 @@
 import { LogConfig, Formatter, Entry,  Color, Nullable, StackData, AppenderTemplateFn } from "../Types"
 import * as moment from "moment"
 import * as chalk from "chalk"
-import { defaultsDeep, memoize, isEmpty, isError, get, defaultTo } from "lodash"
+import { defaultsDeep, memoize, isEmpty, isError, get, defaultTo, flatMap, flatten } from "lodash"
 import { inspect } from "util"
 import { buildString, getThresholdValue } from "../util/CoreUtil"
 import { Option } from "@3fv/prelude-ts"
 import { If, Run } from "../util/FpTools"
-import { isString } from "@3fv/guard"
+import { isFunction, isString } from "@3fv/guard"
 import { Level, LevelName } from "@3fv/logger-proxy"
 
 const DefaultCategoryName = "ROOT"
@@ -18,9 +18,9 @@ export type PatternFormatterTemplateArgs = Omit<Entry, "timestamp"> & {
   showError:boolean
   showLoggerName: boolean
   showStackDataAlways: boolean
-  showArgs:boolean
+  formatArgs:boolean
   color:(text:string) => string
-  error:Nullable<Error>
+  errors?:Nullable<Error[]>
 }
 
 export type PatternTemplateData = AppenderTemplateFn<PatternFormatterTemplateArgs>
@@ -29,7 +29,7 @@ export interface PatternFormatterConfig {
   timestampFormat:string
   template:(data:PatternTemplateData) => string
   useColor:boolean
-  showArgs:boolean
+  formatArgs:boolean
   showStackDataAlways: boolean
   showCategory:boolean
   showLoggerName:boolean
@@ -45,7 +45,7 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
   showTimestamp: true,
   showStackDataAlways: false,
   showError: true,
-  showArgs: true,
+  formatArgs: true,
   //logFn(`${globalPrefix || ""}[${name}] [${level.toUpperCase()}] ${textMsg}`, ...args)
   template: data => {
     const
@@ -60,11 +60,11 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         showCategory,
         showTimestamp,
         showError,
-        showArgs,
+        formatArgs,
         showStackDataAlways,
         logger: {basename: loggerName},
         category,
-        error
+        errors
       } = data,
       stackDataPath = Option.ofNullable(stackData)
       .map(({ path }:StackData) =>
@@ -117,30 +117,35 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         
         // STACK DATA
         (showStackDataAlways || getThresholdValue(level) >= getThresholdValue(Level.warn)) && buildString([
-          stackData ?
-            [
-              `${stackDataPath}:${stackData.line}:${stackData.pos}`,
-              isEmpty(stackData.method) ? "" : ` ${stackData.method}`
-            ] :
-            []
+          Option
+            .ofNullable(stackData)
+            .map(stackDataOrFn => isFunction(stackDataOrFn) ? stackDataOrFn(data) : stackDataOrFn)
+            .map(stackData =>
+              [
+                `${stackDataPath}:${stackData.line}:${stackData.pos}`,
+                isEmpty(stackData.method) ? "" : ` ${stackData.method}`
+              ]
+            )
+            .getOrElse([])
         ], ""),
         
         // MESSAGE
         message,
         
         // ARGS
-        !showArgs && Array.isArray(args) ?
-          "" :
-          args.map(arg => inspect(arg)).join(" "),
+        flatten(!formatArgs ? [] :
+          Array.isArray(args) ?
+          args.map(arg => inspect(arg)).join(" ") :
+          ""),
         
         // ERROR
         buildString(
-          showError && !!error ? [
+          showError && !!errors && errors.length > 0 ? flatMap(errors, error => [
             "\n",
             error.message,
             "\n",
             error.stack
-          ] : []
+          ]) : []
           , "")
       ].filter(isString), " ")
     )
@@ -181,17 +186,19 @@ export class PatternFormatter implements Formatter<PatternFormatterConfig> {
   format(entry:Entry, config:LogConfig):[string, Array<any>] {
     const
       { config: formatterConfig } = this,
-      { template, showError, showStackDataAlways, showLoggerName, timestampFormat, showArgs, showCategory, showTimestamp } = formatterConfig,
+      { template, showError, showStackDataAlways, showLoggerName, timestampFormat, formatArgs, showCategory, showTimestamp } = formatterConfig,
       timestampFormatted = moment(entry.timestamp).format(timestampFormat)
     let { level, args } = entry
     
     const
       color = this.color(level),
-      error = args.find(isError)
+      [errors, argsWithoutErrors] = Option.of(args.filter(isError))
+        .filter(errors => errors.length > 0)
+        .match({
+          None: () => [[], args],
+          Some: errors => [errors, args.filter(it => errors.includes(it))]
+        }) as [Array<Error>, any[]]
     
-    if (!!error) {
-      args = args.filter(it => it !== error)
-    }
     const
       params:PatternTemplateData = {
         ...entry,
@@ -201,17 +208,17 @@ export class PatternFormatter implements Formatter<PatternFormatterConfig> {
         showLoggerName,
         showTimestamp,
         showCategory,
-        showArgs,
+        formatArgs,
         showError,
         showStackDataAlways,
-        args,
-        error
+        args: argsWithoutErrors,
+        errors
       }
     let
       output = template(params)
     
     
-    return [output, entry.args]
+    return [output, Option.ofNullable(formatArgs ? [] : [...argsWithoutErrors, ...errors]).getOrElse([])]
   }
   
   

@@ -16,36 +16,37 @@ function log(
   level: Nullable<Level>,
   message: string,
   args: any[]
-)
-{
+) {
   const
-    config: LogConfig = factory.getConfig(),
+    config:LogConfig = factory.getConfig(),
     { stack: stackConfig } = config,
     { config: categoryConfig } = category,
     { appenderIds } = categoryConfig,
     appenders = config.appenders.filter(it => !appenderIds || appenderIds.includes(it.id))
   
   if (!!appenders.length) {
-    const entry: Entry = {
-      timestamp: Date.now(),
-      level,
-      overrideThreshold: logger.overrideThreshold,
-      category,
-      logger,
-      message,
-      args,
-      stackData: Option.of(stackConfig)
-        .filter(({ enabled, provider }) => !!enabled && isStackDataProvider(provider))
-        .map(({ provider }: LogStackConfig) =>
-          (
-            provider as StackDataProvider
-          )(entry, config)
-        )
-        .getOrNull()
-    }
-    appenders.forEach(appender => {
-      appender.append(entry, config)
-    })
+    Option
+      .of({
+        timestamp: Date.now(),
+        level,
+        overrideThreshold: logger.overrideThreshold,
+        category,
+        logger,
+        message,
+        args,
+        stackData: entry => Option.of(stackConfig)
+          .filter(({ enabled, provider }) => !!enabled && isStackDataProvider(provider))
+          .map(({ provider }:LogStackConfig) =>
+            (
+              provider as StackDataProvider
+            )(entry, config)
+          )
+          .getOrNull()
+      } as Entry)
+      .map(entry =>
+        appenders.forEach(appender => {
+          appender.append(entry, config)
+        }))
   }
 }
 
