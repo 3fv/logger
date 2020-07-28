@@ -17,12 +17,15 @@ export class ConsoleAppender extends AbstractAppender<ConsoleAppenderConfig> {
   write(entry: Entry, config: LogConfig): void {
     const
       {level} = entry,
-      logFn = Option.ofNullable(console[level])
+      logFn = Option
+        .ofNullable(console[level])
         .filter(isFunction)
-        .getOrElse(console.log),
-      [text, args] = this.format(entry, config)
+        .orElse(() => Option.of(console.log))
+        .map(logFn => logFn.bind(console))
+        .get() as ((...args:any[]) => any),
+      [text, args = []] = this.format(entry, config)
     
-    logFn.apply(console,[text,...args.map(formatValue)])
+    logFn.apply(null,[text,...args.map(formatValue)])
     // console.log()
     //process.stdout.write([text,...args.map(formatValue)].join(" ") + "\n")
      //method.apply(console, [text,...args])

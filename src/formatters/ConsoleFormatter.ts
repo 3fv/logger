@@ -68,7 +68,7 @@ export const defaultConsoleFormatterConfig: ConsoleFormatterConfig = {
         level,
         message,
         args,
-        stackData,
+        stackData:stackDataOrFn,
         showLoggerName,
         showCategory,
         showTimestamp,
@@ -79,6 +79,14 @@ export const defaultConsoleFormatterConfig: ConsoleFormatterConfig = {
         category,
         errors
       } = data,
+      stackData = Option.ofNullable(stackDataOrFn)
+        .map((stackDataOrFn) =>
+          isFunction(stackDataOrFn)
+            ? stackDataOrFn(data)
+            : stackDataOrFn
+        )
+        .getOrElse(null),
+        
       stackDataPath = Option.ofNullable(stackData)
         .map(({ path }: StackData) =>
           Option.of(path.indexOf("file:"))
@@ -128,19 +136,15 @@ export const defaultConsoleFormatterConfig: ConsoleFormatterConfig = {
         (showStackDataAlways ||
           getThresholdValue(level) >= getThresholdValue(Level.warn)) &&
           buildString(
-            [
-              Option.ofNullable(stackData)
-                .map((stackDataOrFn) =>
-                  isFunction(stackDataOrFn)
-                    ? stackDataOrFn(data)
-                    : stackDataOrFn
-                )
+            
+              Option
+                .ofNullable(stackData)
                 .map((stackData) => [
                   `${stackDataPath}:${stackData.line}:${stackData.pos}`,
                   isEmpty(stackData.method) ? "" : ` ${stackData.method}`
                 ])
                 .getOrElse([])
-            ],
+            ,
             ""
           ),
 

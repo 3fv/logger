@@ -55,7 +55,7 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         message,
         color,
         args,
-        stackData,
+        stackData: stackDataOrFn,
         showLoggerName,
         showCategory,
         showTimestamp,
@@ -66,6 +66,13 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         category,
         errors
       } = data,
+      stackData = Option.ofNullable(stackDataOrFn)
+        .map((stackDataOrFn) =>
+          isFunction(stackDataOrFn)
+            ? stackDataOrFn(data)
+            : stackDataOrFn
+        )
+        .getOrElse(null),
       stackDataPath = Option.ofNullable(stackData)
       .map(({ path }:StackData) =>
         Option.of(path.indexOf("file:"))
@@ -116,18 +123,15 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         name,
         
         // STACK DATA
-        (showStackDataAlways || getThresholdValue(level) >= getThresholdValue(Level.warn)) && buildString([
+        (showStackDataAlways || getThresholdValue(level) >= getThresholdValue(Level.warn)) && buildString(
           Option
             .ofNullable(stackData)
-            .map(stackDataOrFn => isFunction(stackDataOrFn) ? stackDataOrFn(data) : stackDataOrFn)
-            .map(stackData =>
-              [
-                `${stackDataPath}:${stackData.line}:${stackData.pos}`,
-                isEmpty(stackData.method) ? "" : ` ${stackData.method}`
-              ]
-            )
-            .getOrElse([])
-        ], ""),
+            .map((stackData) => [
+              `${stackDataPath}:${stackData.line}:${stackData.pos}`,
+              isEmpty(stackData.method) ? "" : ` ${stackData.method}`
+            ])
+            .getOrElse([]),
+          ""),
         
         // MESSAGE
         message,

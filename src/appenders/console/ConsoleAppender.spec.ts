@@ -3,25 +3,49 @@ import { LogFactory, Logger, Nullable } from "../../Types"
 import { configure } from "../../Config"
 import { ConsoleAppender } from "../console/ConsoleAppender"
 import { Level } from "@3fv/logger-proxy"
+import { isFunction } from "@3fv/guard"
+import { assign } from "lodash"
 
-let factory: Nullable<LogFactory> = null
-let log: Nullable<Logger>  = null
+const
+  g:any = typeof window === "undefined" ? global : window,
+  levels = Object.values(Level)
 
+let
+  factory: Nullable<LogFactory> = null,
+  log: Nullable<Logger>  = null,
+  originalConsole = g.console
 
 beforeEach(async () => {
+  g.console = levels
+    .reduce((newConsole, level) =>
+        assign(newConsole, {[level]: jest.fn()})
+      , {} as any)
+  
   factory = configure()
     .appenders([
       new ConsoleAppender()
     ])
     .rootLevel(Level.trace)
     .getFactory()
+  
   log = factory.getLogger(__filename)
+})
+
+afterEach(() => {
+  g.console = originalConsole
 })
 
 test("#console", async () => {
   expect(log).not.toBeNull()
   
-  Object.values(Level).forEach(level => {
-    log[level].apply(log, [`testing level ${level}`])
-  })
+  
+  levels
+    .forEach(level => {
+      log[level].apply(log, [`testing level ${level}`])
+      const
+        levelIndex = levels.indexOf(level),
+        levelFn = g.console[level]
+        //spy = consoleSpies[levelIndex]
+      expect(levelFn).toBeCalled()
+    })
 })
