@@ -128,9 +128,7 @@ export interface Formatter<FormatterConfig = {}, Output extends string = string>
  * @interface Logger
  */
 export type Logger = ILogger & {
-  isTraceEnabled(): boolean
-  isDebugEnabled(): boolean
-  isInfoEnabled(): boolean
+  
   path: string
   basename: string
   category: Category

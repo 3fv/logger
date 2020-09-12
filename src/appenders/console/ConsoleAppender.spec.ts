@@ -13,7 +13,8 @@ const
 let
   factory: Nullable<LogFactory> = null,
   log: Nullable<Logger>  = null,
-  originalConsole = g.console
+  originalConsole = g.console,
+  consoleAppender = new ConsoleAppender()
 
 beforeEach(async () => {
   g.console = levels
@@ -21,9 +22,10 @@ beforeEach(async () => {
         assign(newConsole, {[level]: jest.fn()})
       , {} as any)
   
+  
   factory = configure()
     .appenders([
-      new ConsoleAppender()
+      consoleAppender
     ])
     .rootLevel(Level.trace)
     .getFactory()
@@ -43,7 +45,7 @@ test("#console", async () => {
     .forEach(level => {
       log[level].apply(log, [`testing level ${level}`])
       const
-        levelIndex = levels.indexOf(level),
+        //levelIndex = levels.indexOf(level),
         levelFn = g.console[level]
         //spy = consoleSpies[levelIndex]
       expect(levelFn).toBeCalled()

@@ -28,7 +28,7 @@ export abstract class AbstractAppender<C extends AppenderConfig = AppenderConfig
   }
   
   protected getRootThreshold(): number {
-    return getThresholdValue(this.factory.getConfig().rootLevel)
+    return getThresholdValue(this.factory.getRootLevel())
   }
   
   get config():C {
@@ -113,12 +113,12 @@ export abstract class AbstractAppender<C extends AppenderConfig = AppenderConfig
       entryThreshold = getThresholdValue(entry.level),
       shouldLog =
         // IF OVERRIDE IS SET THEN USE IT
-        (isDefined(entry.overrideThreshold) &&
+        (!!entry.overrideThreshold &&
         entryThreshold >= entry.overrideThreshold) ||
         
         // OTHERWISE CHECK NORMALLY
         (entryThreshold >= this.getThreshold(entry.category) &&
-          !isDefined(entry.overrideThreshold))
+          !entry.overrideThreshold)
     
     if (shouldLog)
       this.write(entry, config)

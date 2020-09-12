@@ -117,6 +117,10 @@ export function getThresholdValue(level:Level):number {
   return requiredValue(thresholdValueMap.get(level))
 }
 
+export function passesThreshold(thresholdLevel: Level, testLevel: Level) {
+  return getThresholdValue(thresholdLevel) <= getThresholdValue(testLevel)
+}
+
 export type BuildStringArg = Array<string | string[] | Array<BuildStringArg>>
 
 /**

@@ -1,4 +1,4 @@
-import { getThresholdValue, pathToBasename } from "./util/CoreUtil"
+import { getThresholdValue, passesThreshold, pathToBasename } from "./util/CoreUtil"
 import { Category, LogConfig, Entry, LogFactory, Logger, Nullable, StackDataProvider, LogStackConfig } from "./Types"
 import { Option } from "@3fv/prelude-ts"
 import { isNumber, isFunction, isDefined } from "@3fv/guard"
@@ -17,6 +17,10 @@ function log(
   message: string,
   args: any[]
 ) {
+  if (!passesThreshold(factory.getRootLevel(), level)) {
+    return
+  }
+  
   const
     config:LogConfig = factory.getConfig(),
     { stack: stackConfig } = config,
