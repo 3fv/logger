@@ -32,13 +32,13 @@ export function requiredValue<T, V extends Nullable<T>>(value: V, errorMessage: 
   })
   return value as T
 }
-
-export class FileOption extends OptionStatic {
-  
-  static of<S extends Nullable<string> = Nullable<string>>(path: S): Option<string> {
-    const {test} = require("shelljs")
-    path = (!path ? undefined : isFunction(path.toString) ? path.toString() : path) as S
-    return Option.of(test("-e", path) ? path : undefined)
-  }
-  
-}
+//
+// export class FileOption extends OptionStatic {
+//
+//   static of<S extends Nullable<string> = Nullable<string>>(path: S): Option<string> {
+//     const {test} = require("shelljs")
+//     path = (!path ? undefined : isFunction(path.toString) ? path.toString() : path) as S
+//     return Option.of(test("-e", path) ? path : undefined)
+//   }
+//
+// }
