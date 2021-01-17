@@ -16,6 +16,7 @@ cp README.md package.json lib/
 
 pushd lib
 npm publish --tag latest
+#yarn --registry=https://registry.npmjs.org publish --non-interactive
 cp package.json ../
 popd
 git push
