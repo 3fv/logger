@@ -1,6 +1,6 @@
 {
   "name": "@3fv/logger",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "A simply typed logger for typescript",
   "main": "index.js",
   "types": "index.d.ts",
@@ -13,7 +13,7 @@
     "preversion": "yarn build && yarn test",
     "postversion": "./scripts/release.sh $npm_package_version && echo \"Successfully released version $npm_package_version!\"",
     "release": "yarn version --non-interactive",
-    "release:patch": "yarn release --patch "
+    "release:patch": "yarn --registry=https://registry.npmjs.org release  --patch "
   },
   "publishConfig": {
     "access": "public"
