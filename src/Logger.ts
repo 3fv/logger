@@ -1,12 +1,16 @@
 import { getThresholdValue, passesThreshold, pathToBasename } from "./util/CoreUtil"
-import { Category, LogConfig, Entry, LogFactory, Logger, Nullable, StackDataProvider, LogStackConfig } from "./Types"
+import { Category, LogConfig, Entry, LogFactory, Nullable, StackDataProvider, LogStackConfig } from "./Types"
 import { Option } from "@3fv/prelude-ts"
 import { isNumber, isFunction, isDefined } from "@3fv/guard"
-import { ILogger } from "@3fv/logger-proxy"
+
 import { Level } from "@3fv/logger-proxy"
 
 function isStackDataProvider(o: any): o is StackDataProvider {
   return isFunction(o)
+}
+
+export class Logger {
+
 }
 
 function log(

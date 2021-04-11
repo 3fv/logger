@@ -6,9 +6,7 @@ import { FileWriter } from "./FileWriter"
 import { isFunction } from "@3fv/guard"
 import { Nullable } from "../../Types"
 import { Deferred } from "../../util/Deferred"
-import { Option } from "@3fv/prelude-ts"
 import { mkdirp } from "../../util/ShellUtil"
-import * as FsAsync from "mz/fs"
 import * as Bluebird from "bluebird"
 import * as Fs from 'fs'
 

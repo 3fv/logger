@@ -108,9 +108,9 @@ export class RollingFileHandler extends FileHandler<RollingFileAppenderConfig> {
    *
    * @returns {Promise<void>}
    */
-  protected async prepareFiles() {
+  protected async prepareFiles(): Promise<void> {
     await this.houseKeeping()
-    await this.prepareFiles()
+    //await this.prepareFiles()
   }
   
   /**

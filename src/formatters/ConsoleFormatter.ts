@@ -7,7 +7,6 @@ import {
   AppenderTemplateFn
 } from "../Types"
 import * as moment from "moment"
-import * as chalk from "chalk"
 import {
   defaultsDeep,
   memoize,

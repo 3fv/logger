@@ -1,6 +1,4 @@
 import { AppenderConfig } from "../../Types"
-import * as Path from 'path'
-import * as Fs from "mz/fs"
 
 export interface FileAppenderConfig extends AppenderConfig {
   /**
