@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@3fv/deferred@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@3fv/deferred/-/deferred-1.2.4.tgz#d16d280a26ea8ca7decf3b7a4b9beae8c0dd992f"
+  integrity sha512-G6U2MO/8MWGx7kNbk6TAK24I9/TZlJv1Wepb8LRT/sTjsvpqSH1ckCigxHlrPtpEpbsyYBQZjmof6SnzBi4+AA==
+
+"@3fv/guard@^1.4.24":
+  version "1.4.25"
+  resolved "https://registry.yarnpkg.com/@3fv/guard/-/guard-1.4.25.tgz#bbc69dfcf1cf1a52da56b44e260c8eab5749be3b"
+  integrity sha512-fnvBtsqciBeWNhFOFENKGvNbxq0rQGKaGukew6yjbh2T1gspc8FVm4k024/8k6CwK+jldxkoE5SaSaI6ndCP2A==
+  dependencies:
+    lodash "^4.17.15"
+
 "@3fv/guard@^1.4.6":
   version "1.4.6"
   resolved "https://registry.npmjs.org/@3fv/guard/-/guard-1.4.6.tgz#63f655ab7c5ddca7aa8fe4cca77b6ad9d6898f90"
@@ -9,10 +21,17 @@
   dependencies:
     lodash "^4.17.15"
 
-"@3fv/logger-proxy@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@3fv/logger-proxy/-/logger-proxy-1.0.7.tgz#ffe072e86f9d0c01e5737091c4f099078b58fb1f"
-  integrity sha512-XJdM2ec1xlcpA4LaBS2wKOtK9VDkArVfWX7MV9r0b9Xl2xcBgHaUl+uWk3FCg7OjizFWXTecpNPHi2ohR6+fFA==
+"@3fv/logger-proxy@^1.0.11":
+  version "1.0.44"
+  resolved "https://registry.yarnpkg.com/@3fv/logger-proxy/-/logger-proxy-1.0.44.tgz#09ddb988970e716627484de0d0192867e8ce7a4c"
+  integrity sha512-eCRITSy8ISA7GJlSPpLbaRyRF4TVzPRG7z7b77xAm94TAy3a/nicQzcrLPoUPPHFHKVz5k93qAkvp4melURhpw==
+  dependencies:
+    "@3fv/deferred" "^1.2.4"
+    "@3fv/guard" "^1.4.24"
+    "@3fv/prelude-ts" "^0.8.23"
+    bluebird "^3.7.2"
+    debug "^4.3.1"
+    lodash "^4.17.21"
 
 "@3fv/prelude-ts@^0.8.15":
   version "0.8.15"
@@ -21,6 +40,14 @@
   dependencies:
     hamt_plus "1.0.2"
     list "2.0.18"
+
+"@3fv/prelude-ts@^0.8.23":
+  version "0.8.23"
+  resolved "https://registry.yarnpkg.com/@3fv/prelude-ts/-/prelude-ts-0.8.23.tgz#ebd8a9d02056b1eb523593fcf214eb8dab29dadf"
+  integrity sha512-3LekY8BC88R65D1F7MekBF6hqh33DOPRUjC8IiYhz0o2O7FQCiDicAuyOOxQaMiA1xG1Y9kn729EzCpN1Jxv3w==
+  dependencies:
+    hamt_plus "1.0.2"
+    list "2.0.19"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.5.5"
@@ -1465,6 +1492,13 @@ debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "^2.1.1"
 
+debug@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
+  integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
+  dependencies:
+    ms "2.1.2"
+
 decamelize@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -1911,9 +1945,9 @@ getpass@^0.1.1:
     assert-plus "^1.0.0"
 
 glob-parent@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.0.tgz#5f4c1d1e748d30cd73ad2944b3577a81b081e8c2"
-  integrity sha512-qjtRgnIVmOfnKUE3NJAQEdk+lKrxfw8t5ke7SXtfMTHcjsBfOfWXCQfdb30zfDoZQ2IRSIiidmjtbHZPZ++Ihw==
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
+  integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
   dependencies:
     is-glob "^4.0.1"
 
@@ -2944,6 +2978,11 @@ list@2.0.18:
   resolved "https://registry.yarnpkg.com/list/-/list-2.0.18.tgz#5865b95ab209038cb506e89da8e6f907eba0b8a3"
   integrity sha512-yggUtu2zHYKaamBmg8IqXSTJfmeNBEbwY2ODNoXi+Uuu/s7z5vPnp3aQJfEj860BZQR6pfByTIRvAhYFCGCa2A==
 
+list@2.0.19:
+  version "2.0.19"
+  resolved "https://registry.yarnpkg.com/list/-/list-2.0.19.tgz#370a3d7d3e24cfd5ced2c89cda2baf28e31e2830"
+  integrity sha512-nnVaRp4RaMAQkCpypTThsdxKqgPMiSwJq93eAm2/IbpUa8sd04XKBhkKu+bMk63HmdjK8b8Cuh4xARHWX2ye/Q==
+
 load-json-file@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-4.0.0.tgz#2f5f45ab91e33216234fd53adab668eb4ec0993b"
@@ -2975,6 +3014,11 @@ lodash@^4.17.13, lodash@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 make-dir@^3.0.0:
   version "3.0.2"
@@ -3106,7 +3150,7 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-ms@^2.1.1:
+ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
