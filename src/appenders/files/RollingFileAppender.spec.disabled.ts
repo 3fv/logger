@@ -1,5 +1,5 @@
 import "jest"
-import { LogConfig,  LogFactory, Logger, Nullable } from "../../Types"
+import { LogConfig,  LogFactory, Nullable } from "../../Types"
 import { configure } from "../../Config"
 import * as Path from "path"
 import { Deferred } from "../../util/Deferred"
@@ -7,7 +7,7 @@ import { RollingFileAppender } from "./RollingFileAppender"
 import { range } from "lodash"
 import * as moment from "moment"
 import { cleanup, getLogFiles, TestLogDir } from "../../test/test-utils"
-import { Level } from "@3fv/logger-proxy"
+import { Level, Logger } from "@3fv/logger-proxy"
 
 let config: Nullable<LogConfig> = null
 let factory: Nullable<LogFactory> = null

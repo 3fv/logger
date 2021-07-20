@@ -1,17 +1,14 @@
-import { getThresholdValue, passesThreshold, pathToBasename } from "./util/CoreUtil"
+import {  getThresholdValue, passesThreshold, pathToBasename } from "./util/CoreUtil"
 import { Category, LogConfig, Entry, LogFactory, Nullable, StackDataProvider, LogStackConfig } from "./Types"
 import { Option } from "@3fv/prelude-ts"
 import { isNumber, isFunction, isDefined } from "@3fv/guard"
 
-import { Level } from "@3fv/logger-proxy"
+import { Level, Logger } from "@3fv/logger-proxy"
 
 function isStackDataProvider(o: any): o is StackDataProvider {
   return isFunction(o)
 }
 
-export class Logger {
-
-}
 
 function log(
   factory: LogFactory,
@@ -37,7 +34,7 @@ function log(
       .of({
         timestamp: Date.now(),
         level,
-        overrideThreshold: logger.overrideThreshold,
+        overrideThreshold: undefined,
         category,
         logger,
         message,

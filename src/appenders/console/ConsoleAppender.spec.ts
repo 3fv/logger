@@ -1,8 +1,8 @@
 import "jest"
-import { LogFactory, Logger, Nullable } from "../../Types"
+import { LogFactory, Nullable } from "../../Types"
 import { configure } from "../../Config"
 import { ConsoleAppender } from "../console/ConsoleAppender"
-import { Level } from "@3fv/logger-proxy"
+import { Level,Logger } from "@3fv/logger-proxy"
 import { isFunction } from "@3fv/guard"
 import { assign } from "lodash"
 

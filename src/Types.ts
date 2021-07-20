@@ -1,5 +1,5 @@
 import { defaultsDeep } from "lodash"
-import { ILogger, Level } from "@3fv/logger-proxy"
+import { Level, Logger } from "@3fv/logger-proxy"
 
 export type Nullable<T> = T | undefined | null
 
@@ -14,63 +14,56 @@ const defaultCategoryConfig: CategoryConfig = {
 }
 
 export class Category {
-  
-  
-  private readonly state:{
+  private readonly state: {
     config: CategoryConfig
   }
-  
+
   get config(): CategoryConfig {
     return this.state.config
   }
-  
-  get level(): Level{
+
+  get level(): Level {
     return this.state.config.level
   }
-  
-  constructor(
-    readonly name:string,
-    config: Partial<CategoryConfig> = {}
-  ) {
+
+  constructor(readonly name: string, config: Partial<CategoryConfig> = {}) {
     this.state = {
-      config: defaultsDeep({...config}, defaultCategoryConfig)
+      config: defaultsDeep({ ...config }, defaultCategoryConfig)
     }
   }
-  
-  
-  
+
   setConfig(newConfig: Partial<CategoryConfig>): this {
-    const {config} = this.state
+    const { config } = this.state
     Object.assign(this.state, {
-      config: defaultsDeep(newConfig, {...config})
+      config: defaultsDeep(newConfig, { ...config })
     })
-    
+
     return this
   }
-  
-  
 }
 
 export interface LogStackConfig {
   provider: StackDataProvider
   root: string
-  removeFrames:number  //Defaults to #
-  enabled:boolean
+  removeFrames: number //Defaults to #
+  enabled: boolean
 }
 
 export interface LogConfig {
-  rootLevel:Level
-  formatter:Formatter
-  appenders:Appender<any>[]
-  
+  rootLevel: Level
+  formatter: Formatter
+  appenders: Appender<any>[]
+
   stack: LogStackConfig
-  
 }
 
 /**
  * Responsible for collecting stack, method, file info
  */
-export type StackDataProvider = (entry:Partial<Entry>, config:LogConfig) => Nullable<StackData>
+export type StackDataProvider = (
+  entry: Partial<Entry>,
+  config: LogConfig
+) => Nullable<StackData>
 
 /**
  * Appender config
@@ -80,62 +73,61 @@ export interface AppenderConfig {
 }
 
 export interface StackData {
-  method?:Nullable<string>
-  path?:Nullable<string>
-  folder?:Nullable<string>
-  file?:Nullable<string>
-  pos?:Nullable<string>
-  line?:Nullable<string>
+  method?: Nullable<string>
+  path?: Nullable<string>
+  folder?: Nullable<string>
+  file?: Nullable<string>
+  pos?: Nullable<string>
+  line?: Nullable<string>
   stack?: Array<string>
 }
 
 export interface Entry {
-  timestamp:number
-  level:Level
-  overrideThreshold:number
+  timestamp: number
+  level: Level
+  overrideThreshold: number
   logger: Logger
-  category:Category
-  message:string
-  args:any[]
+  category: Category
+  message: string
+  args: any[]
   stackData?: StackData | ((entry: Entry) => StackData)
 }
 
 export type AppenderTemplateFn<Ext = any> = Entry & Ext
 
 export interface Appender<AppenderConfig> {
-  readonly id:string
-  readonly type:string
-  append:(entry:Entry, config:LogConfig) => void
-  close:() => Promise<void>
+  readonly id: string
+  readonly type: string
+  append: (entry: Entry, config: LogConfig) => void
+  close: () => Promise<void>
   setFactory: (factory: LogFactory) => void
-  setFormatter?:(formatter:Nullable<Formatter>) => void
-  getFormatter?:() => Nullable<Formatter>
-  
+  setFormatter?: (formatter: Nullable<Formatter>) => void
+  getFormatter?: () => Nullable<Formatter>
 }
 
-
-export interface Formatter<FormatterConfig = {}, Output extends string = string> {
-  config:FormatterConfig
-  format:(entry:Entry, config:LogConfig) => [Output, Array<any>]
+export interface Formatter<
+  FormatterConfig = {},
+  Output extends string = string
+> {
+  config: FormatterConfig
+  format: (entry: Entry, config: LogConfig) => [Output, Array<any>]
 }
 
-
-
-/**
- * Logger interface
- *
- * @export
- * @interface Logger
- */
-export type Logger = ILogger & {
-  
-  path: string
-  basename: string
-  category: Category
-  setOverrideThreshold: (level: Level | number) => Logger
-  readonly overrideThreshold: number
-}
-
+//
+// /**
+//  * Logger interface
+//  *
+//  * @export
+//  * @interface Logger
+//  */
+// export type Logger = ILogger & {
+//
+//   path: string
+//   basename: string
+//   category: Category
+//   setOverrideThreshold: (level: Level | number) => Logger
+//   readonly overrideThreshold: number
+// }
 
 /**
  Basic foreground colors.
@@ -160,14 +152,14 @@ export type ForegroundColor =
   | "blueBright"
   | "magentaBright"
   | "cyanBright"
-  | "whiteBright";
+  | "whiteBright"
 
 /**
  Basic background colors.
  
  [More colors here.](https://github.com/chalk/chalk/blob/master/readme.md#256-and-truecolor-color-support)
  */
-export  type BackgroundColor =
+export type BackgroundColor =
   | "bgBlack"
   | "bgRed"
   | "bgGreen"
@@ -185,10 +177,12 @@ export  type BackgroundColor =
   | "bgBlueBright"
   | "bgMagentaBright"
   | "bgCyanBright"
-  | "bgWhiteBright";
+  | "bgWhiteBright"
 
-
-export type GetLogger =  (path: string, categoryName?: Nullable<string>) => Logger
+export type GetLogger = (
+  path: string,
+  categoryName?: Nullable<string>
+) => Logger
 
 export interface LogFactory {
   getRootLevel: () => Level
@@ -203,4 +197,4 @@ export interface LogFactory {
  
  [More colors here.](https://github.com/chalk/chalk/blob/master/readme.md#256-and-truecolor-color-support)
  */
-export  type Color = ForegroundColor | BackgroundColor;
+export type Color = ForegroundColor | BackgroundColor

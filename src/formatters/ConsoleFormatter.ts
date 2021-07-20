@@ -74,7 +74,7 @@ export const defaultConsoleFormatterConfig: ConsoleFormatterConfig = {
         showError,
         formatArgs,
         showStackDataAlways,
-        logger: { basename: loggerName },
+        logger: undefined,//{ basename: loggerName },
         category,
         errors
       } = data,
@@ -112,7 +112,7 @@ export const defaultConsoleFormatterConfig: ConsoleFormatterConfig = {
           ? `(${buildString(
               [
                 showCategory && defaultTo(categoryName, DefaultCategoryName),
-                showLoggerName && loggerName
+                //showLoggerName && loggerName
               ]
                 .filter(isString)
                 .filter((part, index, parts) => part != parts[index + 1]),

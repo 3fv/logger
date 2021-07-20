@@ -62,7 +62,7 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
         showError,
         formatArgs,
         showStackDataAlways,
-        logger: {basename: loggerName},
+        logger: undefined,
         category,
         errors
       } = data,
@@ -102,7 +102,7 @@ export const defaultPatternFormatterConfig:PatternFormatterConfig = {
           Option
             .of([
               If(showCategory, defaultTo(categoryName, DefaultCategoryName)),
-              If(showLoggerName, loggerName, null)
+              //If(showLoggerName, , null)
             ])
             .map(parts =>
               parts.filter((part, index) => isString(part) && part != parts[index + 1])
